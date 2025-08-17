@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8" />
+    <title>Home | NexGen Solutions</title>
+    <link rel="stylesheet" href="{% static 'dashboard.css' %}" />
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" /> -->
+</head>
+<body>
+<!-- Sidebar Navigation -->
+<nav style="padding-top: 40px;">
+  <header>
+    <a href="{% url 'home' %}" class="nav-header-link">NexGen Solutions</a>
+  </header>
+
+
+    <section>
+        <header>Main</header>
+        <ul>
+            <li class="active">Dashboard</li>
+            <li data-value="8">Reports</li>
+            <li>Groups</li>
+        </ul>
+    </section>
+
+    <section>
+        <header>Account</header>
+        <ul>
+            <li>Activity</li>
+            <li data-value="4">Messages</li>
+            <li>Downloads</li>
+        </ul>
+    </section>
+
+    <section>
+        <header>Categories</header>
+        <ul>
+            <li class="red">Cloud Storage Usage</li>
+            <li class="yellow">SaaS Active Users</li>
+            <li class="green">VM Deployments</li>
+            <li class="new">
+                <i class="fa fa-plus-circle"></i> Add Category
+            </li>
+        </ul>
+    </section>
+</nav>
+
+<!-- Main Content -->
+<article>
+    <header>
+        <div class="title" style="padding: 20px;">Dashboard</div>
+        <div class="user"></div>
+        <div class="interval">
+            <form method="post" action="{% url 'logout' %}" style="padding: 10px;">
+                {% csrf_token %}
+                <!--<button type="submit" class="btn btn-outline-danger btn-sm">Logout</button>-->
+                <button type="submit" class="custom-btn btn-5"><span>Logout</span></button>
+            </form>
+        </div>
+    </header>
+
+  <section class="lil-header">
+    <header>Tasks</header>
+    {% if user.is_superuser %}
+      <header>
+    <a href="{% url 'create_task' %}" class="nav-header-link" style="font-size: 25px; border-radius: 10px;">+</a>
+  </header>
+    {% endif %}
+  </section>
+
+  <div class="kanban-board">
+    
+    <!-- To Do Column -->
+    <div class="kanban-column">
+      <h5>To Do</h5>
+      {% for task in tasks_todo %}
+        {% if user.is_superuser %}
+          <a href="{% url 'update_task' task.id %}" class="task-card-link">
+            <div class="task-card">
+              <h4 class="progress-header font-bold mb-4">{{ task.title }}</h4>
+              <div class="flex items-center gap-x-6">
+                <div class="progress-value flex min-w-[118px] min-h-[118px] items-center justify-center rounded-full border-8 border-[#d5d4f0] px-7 font-black">
+                  {{ task.progress }}%
+                </div>
+                <div>
+                  <div style="font-weight: 700; font-size: 1rem;">{{ task.progress|floatformat:0 }}% complete</div>
+                  <p class="mb-6">{{ task.description }}</p>
+                </div>
+              </div>
+            </div>
+          </a>
+        {% else %}
+          <div class="task-card">
+            <h4 class="progress-header font-bold mb-4">{{ task.title }}</h4>
+            <div class="flex items-center gap-x-6">
+              <div class="progress-value flex min-w-[118px] min-h-[118px] items-center justify-center rounded-full border-8 border-[#d5d4f0] px-7 font-black">
+                {{ task.progress }}%
+              </div>
+              <div>
+                <div style="font-weight: 700; font-size: 1rem;">{{ task.progress|floatformat:0 }}% complete</div>
+                <p class="mb-6">{{ task.description }}</p>
+              </div>
+            </div>
+
+            <div class="absolute top-6 right-6 flex gap-2">
+              <form method="post" action="{% url 'update_progress' task.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-primary" {{ task.progress|yesno:"disabled," }}>
+                  ✔ Mark Progress
+                </button>
+              </form>
+            </div>
+          </div>
+        {% endif %}
+      {% empty %}
+        <p>No tasks here.</p>
+      {% endfor %}
+    </div>
+
+    <!-- In Progress Column -->
+    <div class="kanban-column">
+      <h5>In Progress</h5>
+      {% for task in tasks_inprogress %}
+        {% if user.is_superuser %}
+          <a href="{% url 'update_task' task.id %}" class="task-card-link">
+            <div class="task-card">
+              <h4 class="progress-header font-bold mb-4">{{ task.title }}</h4>
+              <div class="flex items-center gap-x-6">
+                <div class="progress-value flex min-w-[118px] min-h-[118px] items-center justify-center rounded-full border-8 border-[#d5d4f0] px-7 font-black">
+                  {{ task.progress }}%
+                </div>
+                <div>
+                  <div style="font-weight: 700; font-size: 1rem;">{{ task.progress|floatformat:0 }}% complete</div>
+                  <p class="mb-6">{{ task.description }}</p>
+                </div>
+              </div>
+            </div>
+          </a>
+        {% else %}
+          <div class="task-card">
+            <h4 class="progress-header font-bold mb-4">{{ task.title }}</h4>
+            <div class="flex items-center gap-x-6">
+              <div class="progress-value flex min-w-[118px] min-h-[118px] items-center justify-center rounded-full border-8 border-[#d5d4f0] px-7 font-black">
+                {{ task.progress }}%
+              </div>
+              <div>
+                <div style="font-weight: 700; font-size: 1rem;">{{ task.progress|floatformat:0 }}% complete</div>
+                <p class="mb-6">{{ task.description }}</p>
+              </div>
+            </div>
+
+            <div class="absolute top-6 right-6 flex gap-2">
+              <form method="post" action="{% url 'update_progress' task.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-primary" {{ task.progress|yesno:"disabled," }}>
+                  ✔ Mark Progress
+                </button>
+              </form>
+            </div>
+          </div>
+        {% endif %}
+      {% empty %}
+        <p>No tasks here.</p>
+      {% endfor %}
+    </div>
+
+    <!-- Completed Column -->
+    <div class="kanban-column">
+      <h5>Completed</h5>
+      {% for task in tasks_completed %}
+        {% if user.is_superuser %}
+          <a href="{% url 'update_task' task.id %}" class="task-card-link">
+            <div class="task-card">
+              <h4 class="progress-header font-bold mb-4">{{ task.title }}</h4>
+              <div class="flex items-center gap-x-6">
+                <div class="progress-value flex min-w-[118px] min-h-[118px] items-center justify-center rounded-full border-8 border-[#d5d4f0] px-7 font-black">
+                  100%
+                </div>
+                <div>
+                  <div style="font-weight: 700; font-size: 1rem;">Completed</div>
+                  <p class="mb-6">{{ task.description }}</p>
+                </div>
+              </div>
+            </div>
+          </a>
+        {% else %}
+          <div class="task-card">
+            <h4 class="progress-header font-bold mb-4">{{ task.title }}</h4>
+            <div class="flex items-center gap-x-6">
+              <div class="progress-value flex min-w-[118px] min-h-[118px] items-center justify-center rounded-full border-8 border-[#d5d4f0] px-7 font-black">
+                100%
+              </div>
+              <div>
+                <div style="font-weight: 700; font-size: 1rem;">Completed</div>
+                <p class="mb-6">{{ task.description }}</p>
+              </div>
+            </div>
+
+            <div class="absolute top-6 right-6 flex gap-2">
+              <button class="btn btn-sm btn-secondary" disabled>Done ✔</button>
+            </div>
+          </div>
+        {% endif %}
+      {% empty %}
+        <p>No tasks here.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+    <!-- Charts Section -->
+
+    <section class="lil-header">
+      <header>Revenue</header>
+    </section>
+
+    <section style="padding-left: 20px;">
+        <div class="chart">
+            <canvas id="c1" width="900" height="200"></canvas>
+        </div>
+    </section>
+
+    <!-- Revenue Section -->
+    <section class="revenue">
+
+        <div class="inlineChart">
+            <canvas id="c2" width="100" height="100"></canvas>
+            <div class="info">
+                <div class="value">$36,146</div>
+                <div class="title">Cloud Storage Solutions</div>
+            </div>
+        </div>
+
+        <div class="inlineChart">
+            <canvas id="c3" width="100" height="100"></canvas>
+            <div class="info">
+                <div class="value">$24,734</div>
+                <div class="title">SaaS Subscriptions</div>
+            </div>
+        </div>
+
+        <div class="inlineChart">
+            <canvas id="c4" width="100" height="100"></canvas>
+            <div class="info">
+                <div class="value">$15,650</div>
+                <div class="title">Infrastructure Deployment</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Usage Table -->
+    <section style="padding-left: 20px;"y>
+        <table>
+            <thead>
+                <tr>
+                    <th>August Service Usage</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Enterprise Backup Service</td>
+                    <td>20 instances</td>
+                    <td>$12,450</td>
+                </tr>
+                <tr>
+                    <td>High-Availability Cloud Hosting</td>
+                    <td>18 Deployments</td>
+                    <td>$8,960</td>
+                </tr>
+                <tr>
+                    <td>AI Compute Cluster Hours</td>
+                    <td>12,500 Hours</td>
+                    <td>$22,170</td>
+                </tr>
+                <tr>
+                    <td>Database-as-a-Service</td>
+                    <td>14 Subscriptions</td>
+                    <td>$6,974</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+</article>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@1.1.1/Chart.min.js"></script>
+<script src="{% static 'dashboard.js' %}"></script>
+</body>
+</html>

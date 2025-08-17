@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NexGen Login</title>
+  {% load static %}
+    <link rel="stylesheet" href="{% static 'dashboard.css' %}" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: url("{% static 'loginwp.jpg' %}") no-repeat center center fixed;      background-size: cover;
+      {% comment %} background: url("{% static 'loginwp2.gif' %}") no-repeat center center fixed; {% endcomment %}
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      color: white;
+    }
+    .login-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 40px;
+      width: 350px;
+      box-shadow: 0 0 40px rgba(0, 255, 255, 0.2);
+      animation: floatIn 1s ease-out forwards;
+      transform: translateY(50px);
+      opacity: 0;
+    }
+    @keyframes floatIn {
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    .login-card h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-weight: 600;
+      color: #d1d0f5;
+      text-shadow: 0 0 6px #d1d0f5aa;
+    }
+    .input-group {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .input-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #d1d0f5;
+      text-shadow: 0 0 4px #d1d0f5aa;
+      font-size: 0.9em;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      transition: 0.3s;
+    }
+    .input-group input::placeholder {
+      color: #d1d0f5;
+      font-weight: 300;
+    }
+    .input-group input:focus {
+      border-color: #d1d0f5;
+      box-shadow: 0 0 8px #d1d0f5aa;
+      background: rgba(255, 255, 255, 0.15);
+    }
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background: #d1d0f5;
+      color: #000;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 10px;
+      text-shadow: none;
+      box-shadow: 0 0 10px #d1d0f5aa;
+    }
+    .login-btn:hover {
+      background: #d1d0f5;
+      box-shadow: 0 0 15px #d1d0f5aa;
+    }
+    .error-message {
+      background: rgba(255, 0, 0, 0.6);
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      text-align: center;
+      font-weight: 600;
+      text-shadow: none;
+      color: white;
+      box-shadow: 0 0 10px rgba(255,0,0,0.5);
+    }
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      margin-top: 15px;
+    }
+    .footer a {
+      color: #d1d0f5;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer a:hover {
+      color: #d1d0f5;
+      text-decoration: underline;
+    }
+    @media (max-width: 400px) {
+      .login-card {
+        width: 90%;
+        padding: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-card" role="main">
+    <h2>Nexgen Solutions</h2>
+
+    {% if error %}
+      <div class="error-message">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+      <div class="input-group">
+        <label for="username">Username</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          placeholder="admin or staff"
+          required
+          autocomplete="username"
+        />
+      </div>
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="adminpass or staffpass"
+          required
+          autocomplete="current-password"
+        />
+      </div>
+      <button type="submit" class="custom btn btn-5" style="width: 270px;">Log In</button>
+    </form>
+
+    <div class="footer">
+      Forgot password? | <a href="#">Sign up</a>
+    </div>
+  </div>
+</body>
+</html>
